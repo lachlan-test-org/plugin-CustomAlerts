@@ -19,6 +19,8 @@ use Piwik\Plugins\API\ProcessedReport;
  */
 class Validator
 {
+    public const MAX_ADDITIONAL_EMAILS = 100;
+
     /**
      * @var ProcessedReport
      */
@@ -31,6 +33,10 @@ class Validator
 
     public function checkAdditionalEmails($additionalEmails)
     {
+        if (count($additionalEmails) > self::MAX_ADDITIONAL_EMAILS) {
+            throw new \Exception(Piwik::translate('CustomAlerts_TooManyAdditionalEmails', [self::MAX_ADDITIONAL_EMAILS]));
+        }
+
         foreach ($additionalEmails as $email) {
             if (!Piwik::isValidEmailString($email)) {
                 throw new \Exception(Piwik::translate('UsersManager_ExceptionInvalidEmail') . ' (' . $email . ')');

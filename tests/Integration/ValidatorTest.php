@@ -40,6 +40,15 @@ class ValidatorTest extends BaseTest
         $this->validator->checkAdditionalEmails(array('test@example.com', 'invalidemail'));
     }
 
+    public function test_checkAdditionalEmails_ShouldFail_IfTooManyEmails()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('CustomAlerts_TooManyAdditionalEmails');
+
+        $emails = array_fill(0, Validator::MAX_ADDITIONAL_EMAILS + 1, 'test@example.com');
+        $this->validator->checkAdditionalEmails($emails);
+    }
+
     public function test_checkAdditionalEmails_ShouldNotFail_IfAllEmail()
     {
         $this->assertNull($this->validator->checkAdditionalEmails(array('test@example.com', 'test@example.com')));
